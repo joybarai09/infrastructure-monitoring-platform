@@ -1,0 +1,29 @@
+
+flowchart TB
+    subgraph HOST["Ubuntu Server 24.04"]
+        subgraph DOCKER["Docker Compose Platform"]
+            APP["FastAPI Application"]
+            NODE["Node Exporter"]
+            CAD["cAdvisor"]
+
+            PROM["Prometheus"]
+            GRAF["Grafana"]
+            ALERT["Alertmanager"]
+            NOTIFY["Notification Service"]
+
+            APP -->|"Application metrics"| PROM
+            NODE -->|"Linux host metrics"| PROM
+            CAD -->|"Container metrics"| PROM
+
+            PROM -->|"Query metrics"| GRAF
+            PROM -->|"Firing / Resolved alerts"| ALERT
+            ALERT -->|"Webhook"| NOTIFY
+        end
+    end
+
+    NOTIFY -->|"Microsoft Graph API"| GRAPH["Microsoft Graph"]
+    GRAPH --> OUTLOOK["Outlook Email"]
+
+    USER["Administrator / Browser"] -->|"SSH Tunnel"| GRAF
+    USER -->|"SSH Tunnel"| PROM
+    USER -->|"SSH Tunnel"| ALERT
