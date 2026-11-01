@@ -1,0 +1,29 @@
+
+name: Infrastructure Monitoring CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-validate:
+    name: Validate and Build Docker Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose
+        run: docker compose config --quiet
+
+      - name: Build FastAPI Image
+        run: docker compose build app
+
+      - name: Build Notification Service Image
+        run: docker compose build notification-service
+
